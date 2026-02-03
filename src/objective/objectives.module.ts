@@ -1,9 +1,9 @@
-import { Module } from "@nestjs/common";
-import { ObjectivesController } from "./objectives.controller";
-import { ObjectiveService } from "./objectives.service";
+import { Module } from '@nestjs/common';
+import { ObjectivesController } from './objectives.controller';
+import { ObjectiveService } from './objectives.service';
 
 @Module({
   controllers: [ObjectivesController],
-  providers:[ObjectiveService]
+  providers: [ObjectiveService],
 })
 export class ObjectivesModule {}

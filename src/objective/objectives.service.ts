@@ -1,39 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { ObjectivesDto } from './objecitvesDTO';
+import { Pool } from 'pg';
 
 @Injectable()
 export class ObjectiveService {
-  objectives = [
-    {
-      id: 1769946521153,
-      Objectives: 'Learn React',
-      keyValues: [
-        {
-          id: 21312312,
-          Values: 'learn java script',
-          progress: '20',
-        },
-        {
-          id: 123123,
-          Values: 'learn node',
-          progress: '30',
-        },
-      ],
-    },
-  ];
+  private pool: Pool;
 
-  findAll() {
-    return this.objectives;
+  constructor() {
+    this.pool = new Pool({
+      host: 'localhost',
+      user: 'postgres',
+      password: 'postgres',
+      database: 'okrs',
+      port: 5432,
+    });
+  }
+
+  async findAll() {
+    return await this.pool.query('SELECT * FROM objectives').then((result) => {
+      return result.rows;
+    });
   }
 
   postObjective(body: ObjectivesDto) {
-    return this.objectives.push(body);
+    const query = `INSERT INTO objectives (title)
+              VALUES ('${body.Objectives}');`;
+    return this.pool.query(query);
   }
 
-  deleteObjectiveById(id: number) {
-    this.objectives = this.objectives.filter(
-      (objective) => objective.id !== id,
-    );
-    return this.objectives;
-  }
+  //
+  // deleteObjectiveById(id: number) {
+  //   this.objectives = this.objectives.filter(
+  //     (objective) => objective.id !== id,
+  //   );
+  //   return this.objectives;
+  // }
 }
