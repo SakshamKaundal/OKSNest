@@ -16,8 +16,8 @@ export class ObjectiveService {
     });
   }
 
-  async findAll() {
-    return await this.pool.query('SELECT * FROM objectives').then((result) => {
+  findAll() {
+    return this.pool.query('SELECT * FROM objectives').then((result) => {
       return result.rows;
     });
   }
