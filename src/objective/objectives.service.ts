@@ -1,38 +1,24 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma.service';
 import { ObjectivesDto } from './objecitvesDTO';
-import { Pool } from 'pg';
 
 @Injectable()
 export class ObjectiveService {
-  private pool: Pool;
-
-  constructor() {
-    this.pool = new Pool({
-      host: 'localhost',
-      user: 'postgres',
-      password: 'postgres',
-      database: 'okrs',
-      port: 5432,
-    });
-  }
+  constructor(private prismaService: PrismaService) {}
 
   findAll() {
-    return this.pool.query('SELECT * FROM objectives').then((result) => {
-      return result.rows;
-    });
+    return this.prismaService.objective.findMany();
   }
 
   postObjective(body: ObjectivesDto) {
-    const query = `INSERT INTO objectives (title)
-              VALUES ('${body.Objectives}');`;
-    return this.pool.query(query);
+    return this.prismaService.objective.create({ data: body });
   }
 
-  //
-  // deleteObjectiveById(id: number) {
-  //   this.objectives = this.objectives.filter(
-  //     (objective) => objective.id !== id,
-  //   );
-  //   return this.objectives;
-  // }
+  deleteObjectiveById(id: number) {
+    return this.prismaService.objective.delete({ where: { id } });
+  }
+
+  PatchObjectiveById(id: number, body: ObjectivesDto) {
+    return this.prismaService.objective.update({ where: { id }, data: body });
+  }
 }
