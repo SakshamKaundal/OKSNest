@@ -1,17 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ObjectivesDto } from './objecitvesDTO';
+import { ObjectiveNotFoundException } from '../CustomException/ObjectiveNotFound';
+import { Objective } from '../../generated/prisma/client';
+import { TradeMarkException } from '../CustomException/TradeMarkException';
 
 @Injectable()
 export class ObjectiveService {
   constructor(private prismaService: PrismaService) {}
 
-  findAll() {
-    return this.prismaService.objective.findMany();
+  async findObjectiveById(objectiveId: number): Promise<Objective[]> {
+    const objectives = await this.prismaService.objective.findMany({
+      where: {
+        id: objectiveId,
+      },
+    });
+    if (objectives.length === 0) {
+      throw new ObjectiveNotFoundException(objectiveId);
+    }
+    return objectives;
   }
 
   postObjective(body: ObjectivesDto) {
-    return this.prismaService.objective.create({ data: body });
+    console.log(body);
+
+    if (body.title.toLowerCase().includes('incubyte')) {
+      throw new TradeMarkException();
+    }
+
+    return this.prismaService.objective.create({
+      data: {
+        title: body.title,
+        keyResults: {
+          createMany: {
+            data: body.keyResult.map((kr) => ({
+              description: kr.description,
+              progress: kr.progress,
+            })),
+          },
+        },
+      },
+    });
   }
 
   deleteObjectiveById(id: number) {
@@ -20,5 +49,9 @@ export class ObjectiveService {
 
   PatchObjectiveById(id: number, body: ObjectivesDto) {
     return this.prismaService.objective.update({ where: { id }, data: body });
+  }
+
+  findAll() {
+    return this.prismaService.objective.findMany();
   }
 }
