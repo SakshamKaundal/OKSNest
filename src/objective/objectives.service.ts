@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ObjectivesDto } from './objecitvesDTO';
 import { ObjectiveNotFoundException } from '../CustomException/ObjectiveNotFound';
-import { Objective } from '../../generated/prisma/client';
+import { Objective } from '../generated/client';
 import { TradeMarkException } from '../CustomException/TradeMarkException';
 
 @Injectable()
@@ -39,6 +39,16 @@ export class ObjectiveService {
             })),
           },
         },
+      },
+    });
+  }
+
+  //fix it to only give keyResult:
+  getKeyResultsByObjId(id: number) {
+    return this.prismaService.objective.findUnique({
+      where: { id },
+      include: {
+        keyResults: true,
       },
     });
   }

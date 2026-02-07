@@ -1,4 +1,4 @@
-import { isPalindrome } from './palindrome.ts';
+import { isPalindrome } from './palindrome';
 
 describe('isPalindrom', function () {
   it('should return true if the valiue is malayalam', () => {

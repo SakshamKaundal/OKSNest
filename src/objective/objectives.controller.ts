@@ -13,7 +13,7 @@ import { ObjectiveService } from './objectives.service';
 import { ObjectivesDto } from './objecitvesDTO';
 import { NormaliseStringPipePipe } from '../normalise-string-pipe/normalise-string-pipe.pipe';
 import { ObjectiveNotFoundExceptionFilter } from './filters/objective-exception.filter';
-import { TrademarkExceptionFilter } from './filters/trademark-exception.filter';
+// import { TrademarkExceptionFilter } from './filters/trademark-exception.filter';
 // import { ObjectivesDto } from './objecitvesDTO';
 
 @Controller('/objectives')
@@ -33,6 +33,10 @@ export class ObjectivesController {
     return this.objectiveService.findAll();
   }
 
+  @Get('/:objectiveId/keyresult')
+  getKeyResultsByObjectiveId(@Param('objectiveId') id: string) {
+    return this.objectiveService.getKeyResultsByObjId(Number.parseInt(id));
+  }
   @Post()
   postObjectives(
     @Body(new ValidationPipe())

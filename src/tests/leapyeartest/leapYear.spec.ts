@@ -1,4 +1,4 @@
-import { isLeapYear } from './leapYear.ts';
+import { isLeapYear } from './leapYear';
 
 describe('isLeapYear', function () {
   it('should return leap year if the value is 2024', () => {

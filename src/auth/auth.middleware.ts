@@ -5,6 +5,7 @@ export class AuthMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.get('authorization');
     console.log(authHeader);
+    return next();
     if (authHeader) {
       if (authHeader === 'HEllo') {
         return next();
